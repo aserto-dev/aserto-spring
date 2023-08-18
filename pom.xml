@@ -10,12 +10,14 @@
 	</parent>
 	<groupId>com.aserto</groupId>
 	<artifactId>aserto-spring</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>spring-middleware</name>
 	<description>Spring Security Filter that enables Aserto authorization</description>
+
 	<properties>
 		<java.version>8</java.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
