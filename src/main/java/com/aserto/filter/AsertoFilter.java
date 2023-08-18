@@ -70,7 +70,8 @@ public class AsertoFilter extends GenericFilterBean {
             identityCtx = identityMapper.getIdentity(httpRequest);
             log.debug("Identity is: [{}] of type: [{}]",  identityCtx.getIdentity(), identityCtx.getIdentityType());
         } catch (InvalidIdentity e) {
-            throw new ServletException(e);
+            unauthorized(response, e.getMessage());
+            return;
         }
 
         String policyPath = policyMapper.policyPath(httpRequest);
@@ -78,19 +79,12 @@ public class AsertoFilter extends GenericFilterBean {
         PolicyCtx policyCtx = new PolicyCtx(policyName, policyLabel, policyPath, new String[]{ authorizerDecision });
         Map<String, com.google.protobuf.Value> resourceCtx = resourceMapper.getResource(httpRequest);;
 
-
-        List<Decision> decisions;
+        boolean isAllowed = false;
         try {
-            decisions = authzClient.is(identityCtx, policyCtx, resourceCtx);
+            List<Decision> decisions = authzClient.is(identityCtx, policyCtx, resourceCtx);
+            isAllowed = isAllowed(decisions);
         } catch (Exception e) {
             throw new ServletException(e);
-        }
-
-        boolean isAllowed = false;
-        for (Decision decision: decisions) {
-            String dec = decision.getDecision();
-            isAllowed = decision.getIs();
-            log.debug("For decision [{}] the answer was [{}]", dec, isAllowed);
         }
 
 
@@ -98,13 +92,28 @@ public class AsertoFilter extends GenericFilterBean {
             chain.doFilter(request, response);
         }
         else {
-            HttpServletResponse httpResponse =(HttpServletResponse) response;
-            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            httpResponse.setHeader("WWW-Authenticate", "BASIC realm=\"Your realm\"");
-
-            httpResponse.setContentType("text/html");
-            PrintWriter writer = httpResponse.getWriter();
-            writer.println("<h1>401 - Unauthorized</h1>");
+            unauthorized(response, "Access denied");
         }
+    }
+
+    private boolean isAllowed(List<Decision> decisions) {
+        for (Decision decision: decisions) {
+            String dec = decision.getDecision();
+            log.debug("For decision [{}] the answer was [{}]", dec, decision.getIs());
+            if (dec.equals(authorizerDecision)) {
+                return decision.getIs();
+            }
+        }
+
+        return false;
+    }
+
+    private void unauthorized(ServletResponse response, String message) throws IOException {
+        HttpServletResponse httpResponse =(HttpServletResponse) response;
+        httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+        httpResponse.setContentType("text/html");
+        PrintWriter writer = httpResponse.getWriter();
+        writer.printf("<h1>401 - Unauthorized - %s </h1>", message);
     }
 }
