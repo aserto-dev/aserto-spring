@@ -27,7 +27,7 @@ import java.util.Map;
 
 @Component
 public class AsertoFilter extends GenericFilterBean {
-    @Value("${aserto.authorizer.decision}")
+    @Value("${aserto.authorizer.decision:allow}")
     private String authorizerDecision;
 
     @Value("${aserto.authorizer.policyName}")
@@ -36,7 +36,7 @@ public class AsertoFilter extends GenericFilterBean {
     @Value("${aserto.authorizer.policyLabel}")
     private String policyLabel;
 
-    @Value("${aserto.authorization.enabled}")
+    @Value("${aserto.authorization.enabled:true}")
     boolean authorizerEnabled;
 
     private final Logger log = LoggerFactory.getLogger(AsertoFilter.class);

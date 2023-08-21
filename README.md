@@ -10,9 +10,9 @@ is made to the Aserto Authorizer. Is the request is authorized it is allowed to 
 Built on top of the [Aserto Java SDK](https://github.com/aserto-dev/aserto-java)
 
 ## Prerequisites
-
-Java 1.8 or newer
-Spring security 6.1.1 or newer
+- Java 8  or newer
+- Spring Boot 2.7.x
+- Spring Security 5.7.x
 
 ## Building
 

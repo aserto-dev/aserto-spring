@@ -8,9 +8,17 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 
 public class AuthzHeaderExtractor implements Extractor {
+    private String headerName;
+    private String claimName;
+
+    public AuthzHeaderExtractor(String headerName, String claimName) {
+        this.headerName = headerName;
+        this.claimName = claimName;
+    }
+
     @Override
     public String extract(HttpServletRequest request) {
-        String jwtString = request.getHeader("Authorization");
+        String jwtString = request.getHeader(headerName);
         String[] authTokens = jwtString.split(" ");
 
         if (authTokens.length != 2) {
@@ -29,6 +37,6 @@ public class AuthzHeaderExtractor implements Extractor {
             throw new ExtractionError(e);
         }
 
-        return jwtClaimSet.getClaim("sub").toString();
+        return jwtClaimSet.getClaim(claimName).toString();
     }
 }

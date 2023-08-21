@@ -5,7 +5,7 @@ import com.aserto.authroizer.mapper.extractor.Extractor;
 import com.aserto.model.IdentityCtx;
 import javax.servlet.http.HttpServletRequest;
 
-public class SubjectIdentityMapper implements IdentityMapper{
+public class SubjectIdentityMapper implements IdentityMapper {
     private Extractor extractor;
 
     public SubjectIdentityMapper(Extractor extractor) {
