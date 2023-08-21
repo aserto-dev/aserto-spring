@@ -1,6 +1,6 @@
 package com.aserto.authroizer.mapper.resource;
 
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import java.util.Map;
 

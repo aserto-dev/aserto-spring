@@ -3,7 +3,7 @@ package com.aserto.authroizer.mapper.identity;
 import com.aserto.authorizer.v2.api.IdentityType;
 import com.aserto.authroizer.mapper.extractor.Extractor;
 import com.aserto.model.IdentityCtx;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 public class JwtIdentityMapper implements IdentityMapper {
     private Extractor extractor;

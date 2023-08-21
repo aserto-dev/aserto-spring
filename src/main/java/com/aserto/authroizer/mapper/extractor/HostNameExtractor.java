@@ -1,6 +1,6 @@
 package com.aserto.authroizer.mapper.extractor;
 
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 public class HostNameExtractor implements Extractor{
 
