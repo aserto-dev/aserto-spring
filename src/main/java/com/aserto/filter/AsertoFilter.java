@@ -51,6 +51,10 @@ public class AsertoFilter extends GenericFilterBean {
         this.policyMapper = policyMapper;
         this.resourceMapper = resourceMapper;
         this.authzClient = authzClient;
+
+        if (!authorizerEnabled) {
+            log.debug("Aserto authorization is disabled");
+        }
     }
 
     @Override
@@ -59,8 +63,8 @@ public class AsertoFilter extends GenericFilterBean {
             ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
         if (!authorizerEnabled) {
-            log.debug("Aserto authorization is disabled");
             chain.doFilter(request, response);
+            return;
         }
 
         IdentityCtx identityCtx;

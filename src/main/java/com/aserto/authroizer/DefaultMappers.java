@@ -3,6 +3,7 @@ package com.aserto.authroizer;
 import com.aserto.AuthorizerClient;
 import com.aserto.AuthzClient;
 import com.aserto.ChannelBuilder;
+import com.aserto.authroizer.config.loader.spring.AuhorizerLoader;
 import com.aserto.authroizer.mapper.extractor.Extractor;
 import com.aserto.authroizer.mapper.extractor.HeaderExtractor;
 import com.aserto.authroizer.mapper.identity.IdentityMapper;
@@ -24,12 +25,12 @@ import javax.net.ssl.SSLException;
 @Component
 public class DefaultMappers {
     private RequestMappingHandlerMapping handlerMapping;
-    private ConfigLoader configLoader;
+    private AuhorizerLoader auhorizerLoader;
 
     @Autowired
-    public DefaultMappers(RequestMappingHandlerMapping handlerMapping, ConfigLoader configLoader) {
+    public DefaultMappers(RequestMappingHandlerMapping handlerMapping, AuhorizerLoader auhorizerLoader) {
         this.handlerMapping = handlerMapping;
-        this.configLoader = configLoader;
+        this.auhorizerLoader = auhorizerLoader;
     }
 
     @Bean
@@ -54,7 +55,7 @@ public class DefaultMappers {
     @Bean
     @ConditionalOnMissingBean(AuthorizerClient.class)
     public AuthorizerClient authorizerClientDiscoverer() throws SSLException {
-        Config authzCfg = configLoader.getAuthzCfg();
+        Config authzCfg = auhorizerLoader.loadConfig();
         ManagedChannel channel = new ChannelBuilder(authzCfg).build();
 
         return new AuthzClient(channel);
