@@ -30,13 +30,17 @@ Add the middleware to your project
 
 ## Configuration
 The following configuration settings are required for authorization:
+
 ### Topaz
 - aserto.authorizer.host
 - aserto.authorizer.port
-- aserto.authorizer.cert.path
+- aserto.authorizer.insecure
+- aserto.authorizer.grpc.caCertPath
 - aserto.authorizer.policyName
 - aserto.authorizer.policyLabel
+- aserto.authorizer.token
 - aserto.authorizer.decision
+
 
 ### Aserto
 - aserto.authorizer.host
@@ -44,6 +48,7 @@ The following configuration settings are required for authorization:
 - #aserto.authorizer.apiKey
 - aserto.authorizer.policyName
 - aserto.authorizer.policyLabel
+- aserto.authorizer.token
 - aserto.authorizer.decision
 
 ## Usage
