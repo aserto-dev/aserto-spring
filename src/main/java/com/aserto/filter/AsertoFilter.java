@@ -30,10 +30,10 @@ public class AsertoFilter extends GenericFilterBean {
     @Value("${aserto.authorizer.decision:allow}")
     private String authorizerDecision;
 
-    @Value("${aserto.authorizer.policyName}")
+    @Value("${aserto.authorizer.policyName:}")
     private String policyName;
 
-    @Value("${aserto.authorizer.policyLabel}")
+    @Value("${aserto.authorizer.policyLabel:}")
     private String policyLabel;
 
     @Value("${aserto.authorization.enabled:true}")

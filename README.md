@@ -35,6 +35,7 @@ The following configuration settings are required for authorization:
 - aserto.authorizer.host
 - aserto.authorizer.port
 - aserto.authorizer.insecure
+- aserto.authorizer.policyRoot
 - aserto.authorizer.grpc.caCertPath
 - aserto.authorizer.policyName
 - aserto.authorizer.policyLabel
@@ -45,6 +46,7 @@ The following configuration settings are required for authorization:
 ### Aserto
 - aserto.authorizer.host
 - aserto.authorizer.port
+- aserto.authorizer.policyRoot
 - #aserto.authorizer.apiKey
 - aserto.authorizer.policyName
 - aserto.authorizer.policyLabel

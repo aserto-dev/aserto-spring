@@ -17,8 +17,8 @@ import java.util.Map;
 public class HttpPathPolicyMapper implements PolicyMapper {
     private RequestMappingHandlerMapping handlerMapping;
 
-    @Value("${aserto.authorizer.policyName}")
-    private String policyName;
+    @Value("${aserto.authorizer.policyRoot}")
+    private String policyRoot;
 
     @Autowired
     public HttpPathPolicyMapper(RequestMappingHandlerMapping handlerMapping) {
@@ -45,7 +45,7 @@ public class HttpPathPolicyMapper implements PolicyMapper {
             }
         }
 
-        return policyName + "." + method.toUpperCase()  + "." + String.join(".", tokens);
+        return policyRoot + "." + method.toUpperCase()  + "." + String.join(".", tokens);
     }
 
     public String extractPattern(HttpServletRequest request) throws NoMatchingMappingException {
