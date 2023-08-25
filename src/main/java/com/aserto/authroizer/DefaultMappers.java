@@ -8,6 +8,7 @@ import com.aserto.authroizer.mapper.extractor.Extractor;
 import com.aserto.authroizer.mapper.extractor.HeaderExtractor;
 import com.aserto.authroizer.mapper.identity.IdentityMapper;
 import com.aserto.authroizer.mapper.identity.JwtIdentityMapper;
+import com.aserto.authroizer.mapper.identity.NoneIdentityMapper;
 import com.aserto.authroizer.mapper.policy.HttpPathPolicyMapper;
 import com.aserto.authroizer.mapper.policy.PolicyMapper;
 import com.aserto.authroizer.mapper.resource.EmptyResourceMapper;
@@ -38,8 +39,7 @@ public class DefaultMappers {
     @Bean
     @ConditionalOnMissingBean(IdentityMapper.class)
     public IdentityMapper identityDiscoverer() {
-        Extractor headerExtractor = new HeaderExtractor("Authorization");
-        return new JwtIdentityMapper(headerExtractor);
+        return new NoneIdentityMapper();
     }
 
     @Bean

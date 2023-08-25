@@ -36,7 +36,7 @@ public class PathParamsResourceMapper implements ResourceMapper {
             }
         }
 
-        throw new ResourceMapperError("Uri" + uri + "does not match any mapping");
+        throw new ResourceMapperError("Uri " + uri + " does not match any mapping");
     }
 
     private Map<String, Value> extractParamsMap(String pattern, String uri, AntPathMatcher apm) {
