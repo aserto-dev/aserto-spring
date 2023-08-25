@@ -1,9 +1,7 @@
 package com.aserto.authroizer.mapper.policy;
 
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.condition.PathPatternsRequestCondition;
@@ -13,14 +11,12 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import java.util.Arrays;
 import java.util.Map;
 
-@Component
 public class HttpPathPolicyMapper implements PolicyMapper {
     private RequestMappingHandlerMapping handlerMapping;
 
     @Value("${aserto.authorizer.policyRoot}")
     private String policyRoot;
 
-    @Autowired
     public HttpPathPolicyMapper(RequestMappingHandlerMapping handlerMapping) {
         this.handlerMapping = handlerMapping;
     }
@@ -52,7 +48,7 @@ public class HttpPathPolicyMapper implements PolicyMapper {
         String uri = request.getRequestURI();
         AntPathMatcher apm = new AntPathMatcher();
         String pattern = "";
-        for (Map.Entry<RequestMappingInfo, HandlerMethod> mappingInfo : this.handlerMapping.getHandlerMethods().entrySet()) {
+        for (Map.Entry<RequestMappingInfo, HandlerMethod> mappingInfo : handlerMapping.getHandlerMethods().entrySet()) {
             PathPatternsRequestCondition pathPatternsCondition = mappingInfo.getKey().getPathPatternsCondition();
             if (pathPatternsCondition == null) {
                 continue;

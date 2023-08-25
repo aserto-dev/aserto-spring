@@ -11,6 +11,7 @@ import com.aserto.authroizer.mapper.identity.JwtIdentityMapper;
 import com.aserto.authroizer.mapper.policy.HttpPathPolicyMapper;
 import com.aserto.authroizer.mapper.policy.PolicyMapper;
 import com.aserto.authroizer.mapper.resource.EmptyResourceMapper;
+import com.aserto.authroizer.mapper.resource.PathParamsResourceMapper;
 import com.aserto.authroizer.mapper.resource.ResourceMapper;
 import com.aserto.model.Config;
 import io.grpc.ManagedChannel;
@@ -25,10 +26,11 @@ import javax.net.ssl.SSLException;
 @Component
 public class DefaultMappers {
     private RequestMappingHandlerMapping handlerMapping;
-    private AuhorizerLoader auhorizerLoader;
+    private final AuhorizerLoader auhorizerLoader;
 
     @Autowired
-    public DefaultMappers(RequestMappingHandlerMapping handlerMapping, AuhorizerLoader auhorizerLoader) {
+    public DefaultMappers(RequestMappingHandlerMapping handlerMapping,
+                          AuhorizerLoader auhorizerLoader) {
         this.handlerMapping = handlerMapping;
         this.auhorizerLoader = auhorizerLoader;
     }
@@ -49,7 +51,7 @@ public class DefaultMappers {
     @Bean
     @ConditionalOnMissingBean(ResourceMapper.class)
     public ResourceMapper mapperDiscoverer() {
-        return new EmptyResourceMapper();
+        return new PathParamsResourceMapper(handlerMapping);
     }
 
     @Bean
