@@ -53,7 +53,7 @@ public class AsertoFilter extends GenericFilterBean {
         this.authzClient = authzClient;
 
         if (!authorizerEnabled) {
-            log.debug("Aserto authorization is disabled");
+            log.info("Aserto authorization is disabled");
         }
     }
 

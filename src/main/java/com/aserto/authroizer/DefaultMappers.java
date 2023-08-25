@@ -25,7 +25,7 @@ import javax.net.ssl.SSLException;
 
 @Component
 public class DefaultMappers {
-    private RequestMappingHandlerMapping handlerMapping;
+    private final RequestMappingHandlerMapping handlerMapping;
     private final AuhorizerLoader auhorizerLoader;
 
     @Autowired
