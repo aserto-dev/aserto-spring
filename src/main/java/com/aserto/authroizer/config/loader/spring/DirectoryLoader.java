@@ -10,11 +10,8 @@ public class DirectoryLoader implements ConfigLoader {
     @Value("${aserto.tenantId:}")
     private String tenantId;
 
-    @Value("${aserto.directory.host:localhost}")
-    private String host;
-
-    @Value("${aserto.directory.port:9292}")
-    private Integer port;
+    @Value("${aserto.directory.serviceUrl:localhost:9292}")
+    private String serviceUrl;
 
     @Value("${aserto.directory.apiKey:}")
     private String apiKey;
@@ -31,10 +28,11 @@ public class DirectoryLoader implements ConfigLoader {
     @Override
     public Config loadConfig() {
         Config cfg = new Config();
+        Address address = new Address(serviceUrl);
 
         cfg.setTenantId(tenantId);
-        cfg.setHost(host);
-        cfg.setPort(port);
+        cfg.setHost(address.getHost());
+        cfg.setPort(address.getPort());
         cfg.setApiKey(apiKey);
         cfg.setToken(token);
         cfg.setInsecure(insecure);

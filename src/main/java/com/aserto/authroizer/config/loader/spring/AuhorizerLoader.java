@@ -10,11 +10,8 @@ public class AuhorizerLoader implements ConfigLoader {
     @Value("${aserto.tenantId:}")
     private String tenantId;
 
-    @Value("${aserto.authorizer.host:localhost}")
-    private String host;
-
-    @Value("${aserto.authorizer.port:9292}")
-    private Integer port;
+    @Value("${aserto.authorizer.serviceUrl:localhost:8282}")
+    private String serviceUrl;
 
     @Value("${aserto.authorizer.apiKey:}")
     private String apiKey;
@@ -31,10 +28,11 @@ public class AuhorizerLoader implements ConfigLoader {
     @Override
     public Config loadConfig() {
         Config cfg = new Config();
+        Address address = new Address(serviceUrl);
 
         cfg.setTenantId(tenantId);
-        cfg.setHost(host);
-        cfg.setPort(port);
+        cfg.setHost(address.getHost());
+        cfg.setPort(address.getPort());
         cfg.setApiKey(apiKey);
         cfg.setToken(token);
         cfg.setInsecure(insecure);
