@@ -116,8 +116,8 @@ public class AsertoFilter extends GenericFilterBean {
         HttpServletResponse httpResponse =(HttpServletResponse) response;
         httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        httpResponse.setContentType("text/html");
+        httpResponse.setContentType("application/json");
         PrintWriter writer = httpResponse.getWriter();
-        writer.printf("<h1>401 - Unauthorized - %s </h1>", message);
+        writer.printf("{error: \"Unauthorized - %s\"}\n", message);
     }
 }
