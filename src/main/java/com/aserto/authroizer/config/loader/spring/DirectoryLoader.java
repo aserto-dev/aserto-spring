@@ -16,9 +16,6 @@ public class DirectoryLoader implements ConfigLoader {
     @Value("${aserto.directory.apiKey:}")
     private String apiKey;
 
-    @Value("${aserto.directory.token:}")
-    private String token;
-
     @Value("${aserto.directory.insecure:false}")
     private Boolean insecure;
 
@@ -34,7 +31,6 @@ public class DirectoryLoader implements ConfigLoader {
         cfg.setHost(address.getHost());
         cfg.setPort(address.getPort());
         cfg.setApiKey(apiKey);
-        cfg.setToken(token);
         cfg.setInsecure(insecure);
         cfg.setCaCertPath(caCertPath);
 

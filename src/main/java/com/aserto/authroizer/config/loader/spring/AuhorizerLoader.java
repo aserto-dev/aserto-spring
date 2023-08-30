@@ -16,9 +16,6 @@ public class AuhorizerLoader implements ConfigLoader {
     @Value("${aserto.authorizer.apiKey:}")
     private String apiKey;
 
-    @Value("${aserto.authorizer.token:}")
-    private String token;
-
     @Value("${aserto.authorizer.insecure:false}")
     private Boolean insecure;
 
@@ -34,7 +31,6 @@ public class AuhorizerLoader implements ConfigLoader {
         cfg.setHost(address.getHost());
         cfg.setPort(address.getPort());
         cfg.setApiKey(apiKey);
-        cfg.setToken(token);
         cfg.setInsecure(insecure);
         cfg.setCaCertPath(caCertPath);
 
