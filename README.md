@@ -99,4 +99,4 @@ All you have to do is provide a bean that returns an instance that implement the
 
 ## Example
 
-An example can be found in the [example](https://github.com/aserto-dev/aserto-spring/tree/main/examples/spring-authz-example) directory.
+An example can be found in the [example](https://github.com/aserto-dev/aserto-spring/tree/main/examples) directory.
