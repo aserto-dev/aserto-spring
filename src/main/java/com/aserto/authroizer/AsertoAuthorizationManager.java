@@ -1,31 +1,28 @@
-package com.aserto.filter;
+package com.aserto.authroizer;
 
 import com.aserto.AuthorizerClient;
 import com.aserto.authorizer.v2.Decision;
-import com.aserto.authroizer.AuthzConfig;
-import com.aserto.model.IdentityCtx;
-import com.aserto.model.PolicyCtx;
 import com.aserto.authroizer.mapper.identity.IdentityMapper;
 import com.aserto.authroizer.mapper.identity.InvalidIdentity;
 import com.aserto.authroizer.mapper.policy.PolicyMapper;
 import com.aserto.authroizer.mapper.resource.ResourceMapper;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.aserto.model.IdentityCtx;
+import com.aserto.model.PolicyCtx;
+import com.google.protobuf.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
-public class AsertoFilter extends GenericFilterBean {
-    private final Logger log = LoggerFactory.getLogger(AsertoFilter.class);
+public final class AsertoAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
+    private final Logger log = LoggerFactory.getLogger(AsertoAuthorizationManager.class);
     private String authorizerDecision;
     private String policyName;
     private String policyLabel;
@@ -35,7 +32,7 @@ public class AsertoFilter extends GenericFilterBean {
     private ResourceMapper resourceMapper;
     private AuthorizerClient authzClient;
 
-    public AsertoFilter(AuthzConfig authzConfig) {
+    public AsertoAuthorizationManager(AuthzConfig authzConfig) {
         this.identityMapper = authzConfig.getIdentityMapper();
         this.policyMapper = authzConfig.getPolicyMapper();
         this.resourceMapper = authzConfig.getResourceMapper();
@@ -46,51 +43,43 @@ public class AsertoFilter extends GenericFilterBean {
         this.authorizerEnabled = authzConfig.isAuthorizerEnabled();
 
         if (!authorizerEnabled) {
-            log.info("Aserto authorization is disabled");
+            log.debug("Aserto authorization is disabled");
         }
     }
 
     @Override
-    public void doFilter(
-            ServletRequest request,
-            ServletResponse response,
-            FilterChain chain) throws IOException, ServletException {
+    public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
         if (!authorizerEnabled) {
-            chain.doFilter(request, response);
-            return;
+            return new AuthorizationDecision(true);
         }
 
         IdentityCtx identityCtx;
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletRequest httpRequest = context.getRequest();
 
         try {
             identityCtx = identityMapper.getIdentity(httpRequest);
             log.debug("Identity is: [{}] of type: [{}]",  identityCtx.getIdentity(), identityCtx.getIdentityType());
         } catch (InvalidIdentity e) {
-            unauthorized(response, e.getMessage());
-            return;
+            log.error("Invalid identity [{}]",  e.getMessage());
+            return new AuthorizationDecision(false);
         }
 
         String policyPath = policyMapper.policyPath(httpRequest);
         log.debug("Policy path is [{}]", policyPath);
         PolicyCtx policyCtx = new PolicyCtx(policyName, policyLabel, policyPath, new String[]{ authorizerDecision });
-        Map<String, com.google.protobuf.Value> resourceCtx = resourceMapper.getResource(httpRequest);
+        Map<String, Value> resourceCtx = resourceMapper.getResource(httpRequest);
 
         boolean isAllowed = false;
         try {
             List<Decision> decisions = authzClient.is(identityCtx, policyCtx, resourceCtx);
             isAllowed = isAllowed(decisions);
         } catch (Exception e) {
-            throw new ServletException(e);
+            log.error("Is call failed [{}]",  e.getMessage());
+            return new AuthorizationDecision(false);
         }
 
 
-        if (isAllowed) {
-            chain.doFilter(request, response);
-        }
-        else {
-            unauthorized(response, "Access denied");
-        }
+        return new AuthorizationDecision(isAllowed);
     }
 
     private boolean isAllowed(List<Decision> decisions) {
@@ -103,14 +92,5 @@ public class AsertoFilter extends GenericFilterBean {
         }
 
         return false;
-    }
-
-    private void unauthorized(ServletResponse response, String message) throws IOException {
-        HttpServletResponse httpResponse =(HttpServletResponse) response;
-        httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
-        httpResponse.setContentType("application/json");
-        PrintWriter writer = httpResponse.getWriter();
-        writer.printf("{error: \"Unauthorized - %s\"}%n", message);
     }
 }
