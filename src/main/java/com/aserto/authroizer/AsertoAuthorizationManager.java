@@ -9,6 +9,7 @@ import com.aserto.authroizer.mapper.resource.ResourceMapper;
 import com.aserto.model.IdentityCtx;
 import com.aserto.model.PolicyCtx;
 import com.google.protobuf.Value;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authorization.AuthorizationDecision;
@@ -16,7 +17,6 @@ import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;

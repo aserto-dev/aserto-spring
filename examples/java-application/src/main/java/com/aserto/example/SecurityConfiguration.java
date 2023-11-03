@@ -11,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 
 @Configuration
+//@EnableMethodSecurity
 public class SecurityConfiguration {
     private AuthzConfig authzCfg;
     public SecurityConfiguration(AuthzConfig authzCfg) {
@@ -22,10 +23,10 @@ public class SecurityConfiguration {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> authorize
-                    .antMatchers(HttpMethod.GET, "/todos")
+                    .requestMatchers(HttpMethod.GET, "/todos")
                     .access(new CheckConfig(authzCfg, "viewer", "group", "member").getAuthManager())
 
-                    .antMatchers(HttpMethod.POST, "/todos")
+                    .requestMatchers(HttpMethod.POST, "/todos")
                     .access(new CheckConfig(authzCfg, "admin", "group", "member").getAuthManager())
 
                     .anyRequest().denyAll()

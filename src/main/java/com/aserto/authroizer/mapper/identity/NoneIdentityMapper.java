@@ -2,7 +2,7 @@ package com.aserto.authroizer.mapper.identity;
 
 import com.aserto.authorizer.v2.api.IdentityType;
 import com.aserto.model.IdentityCtx;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class NoneIdentityMapper implements IdentityMapper {
     @Override

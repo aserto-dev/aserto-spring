@@ -1,8 +1,8 @@
 package com.aserto.authroizer.mapper.resource;
 
 import com.google.protobuf.Value;
+import jakarta.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 public class StaticResourceMapper implements ResourceMapper {
