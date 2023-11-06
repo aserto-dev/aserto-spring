@@ -19,20 +19,20 @@ public class CheckConfig {
         this.authzCfg = new AuthzConfig(authzCfg);
     }
 
-    public CheckConfig(AuthzConfig filterConfig, String objectKey, String objectType, String relation) {
+    public CheckConfig(AuthzConfig filterConfig, String objectType, String objectKey, String relation) {
         this.authzCfg = new AuthzConfig(filterConfig);
-        this.objectKey = objectKey;
         this.objectType = objectType;
-        this.relation = relation;
-    }
-
-    public CheckConfig setObjectKey(String objectKey) {
         this.objectKey = objectKey;
-        return this;
+        this.relation = relation;
     }
 
     public CheckConfig setObjectType(String objectType) {
         this.objectType = objectType;
+        return this;
+    }
+
+    public CheckConfig setObjectKey(String objectKey) {
+        this.objectKey = objectKey;
         return this;
     }
 
@@ -58,8 +58,8 @@ public class CheckConfig {
 
     private Map<String, Value> buildResources() {
         Map<String, Value> resourceCtx = new HashMap<>();
-        resourceCtx.put("object_key", Value.newBuilder().setStringValue(objectKey).build());
         resourceCtx.put("object_type", Value.newBuilder().setStringValue(objectType).build());
+        resourceCtx.put("object_key", Value.newBuilder().setStringValue(objectKey).build());
         resourceCtx.put("relation", Value.newBuilder().setStringValue(relation).build());
 
         return resourceCtx;
