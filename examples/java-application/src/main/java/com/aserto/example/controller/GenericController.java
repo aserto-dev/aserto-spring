@@ -11,7 +11,7 @@ public class GenericController {
     }
 
     @GetMapping("/todos")
-    @PreAuthorize("@authz.check('group', 'admin', 'member')")
+    @PreAuthorize("@aserto.check('group', 'viewer', 'member')")
     public String getTodo() {
         return "Hello from route GET /todos";
     }
@@ -27,7 +27,7 @@ public class GenericController {
     }
 
     @PutMapping("/todos/{id}")
-    @PreAuthorize("@authz.check('group', #id, @customGetter.getValue())")
+    @PreAuthorize("@aserto.check('group', 'admin', 'member')")
     public String putTodo(@PathVariable String id) {
         return "Hello from route PUT /todos/{" + id + "}";
     }

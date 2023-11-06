@@ -28,14 +28,14 @@ public final class AsertoAuthorizationManager implements AuthorizationManager<Re
     private String policyLabel;
     boolean authorizerEnabled;
     private IdentityMapper identityMapper;
-    private PolicyMapper policyMapper;
-    private ResourceMapper resourceMapper;
+    private PolicyMapper configPolicyMapper;
+    private ResourceMapper configResourceMapper;
     private AuthorizerClient authzClient;
 
     public AsertoAuthorizationManager(AuthzConfig authzConfig) {
         this.identityMapper = authzConfig.getIdentityMapper();
-        this.policyMapper = authzConfig.getPolicyMapper();
-        this.resourceMapper = authzConfig.getResourceMapper();
+        this.configPolicyMapper = authzConfig.getPolicyMapper();
+        this.configResourceMapper = authzConfig.getResourceMapper();
         this.authzClient = authzConfig.getAuthzClient();
         this.authorizerDecision = authzConfig.getAuthorizerDecision();
         this.policyName = authzConfig.getPolicyName();
@@ -49,12 +49,19 @@ public final class AsertoAuthorizationManager implements AuthorizationManager<Re
 
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
+        return this.check(context.getRequest());
+    }
+
+    public AuthorizationDecision check(HttpServletRequest httpRequest) {
+        return this.check(httpRequest, configPolicyMapper, configResourceMapper);
+    }
+
+    public AuthorizationDecision check(HttpServletRequest httpRequest, PolicyMapper policyMapper, ResourceMapper resourceMapper) {
         if (!authorizerEnabled) {
             return new AuthorizationDecision(true);
         }
 
         IdentityCtx identityCtx;
-        HttpServletRequest httpRequest = context.getRequest();
 
         try {
             identityCtx = identityMapper.getIdentity(httpRequest);
