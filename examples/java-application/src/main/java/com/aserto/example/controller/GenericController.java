@@ -1,5 +1,6 @@
 package com.aserto.example.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -10,6 +11,7 @@ public class GenericController {
     }
 
     @GetMapping("/todos")
+    @PreAuthorize("@authz.check('group', 'admin', 'member')")
     public String getTodo() {
         return "Hello from route GET /todos";
     }
@@ -25,6 +27,7 @@ public class GenericController {
     }
 
     @PutMapping("/todos/{id}")
+    @PreAuthorize("@authz.check('group', #id, @customGetter.getValue())")
     public String putTodo(@PathVariable String id) {
         return "Hello from route PUT /todos/{" + id + "}";
     }
