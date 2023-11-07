@@ -41,13 +41,28 @@ public class CheckConfig {
         return this;
     }
 
+    public CheckConfig setObjectTypeMapper(ObjectTypeMapper objectTypeMapper) {
+        this.objectTypeMapper = objectTypeMapper;
+        return this;
+    }
+
     public CheckConfig setObjectKey(String objectKey) {
         this.objectIdMapper = new StaticObjectIdMapper(objectKey);
         return this;
     }
 
+    public CheckConfig setObjectIdMapper(ObjectIdMapper objectIdMapper) {
+        this.objectIdMapper = objectIdMapper;
+        return this;
+    }
+
     public CheckConfig setRelation(String relation) {
         this.relationMapper = new StaticRelationMapper(relation);
+        return this;
+    }
+
+    public CheckConfig setRelationMapper(RelationMapper relationMapper) {
+        this.relationMapper = relationMapper;
         return this;
     }
 
