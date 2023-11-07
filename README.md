@@ -10,9 +10,9 @@ is made to the Aserto Authorizer. Is the request is authorized it is allowed to 
 Built on top of the [Aserto Java SDK](https://github.com/aserto-dev/aserto-java)
 
 ## Prerequisites
-- Java 8  or newer
-- Spring Boot 2.7.x
-- Spring Security 5.7.x
+- Java 17  or newer
+- Spring Boot 3.1.5 or newer
+- Spring Security 6.1.5 or newer
 
 ## Building
 
@@ -24,7 +24,6 @@ Add the middleware to your project
 <dependency>
     <groupId>com.aserto</groupId>
     <artifactId>aserto-spring</artifactId>
-    <version>0.0.1</version>
 </dependency>
 ```
 
@@ -57,11 +56,31 @@ In order to use the middleware you just need to add the annotation for component
 @ComponentScan("com.aserto")
 ```
 
+and configure the security filter chain to use the middleware.
+
+```java
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(authorize -> authorize
+                    .anyRequest().access(new AsertoAuthorizationManager(authzCfg))
+        );
+        return http.build();
+    }
+```
 ### Middleware defaults
-By default the middleware extracts 
-- the identity from the Authorization header  e.g. `Authorization: Bearer <JWT>`
-- the policy path is extracted from the rest controller mappings e.g. `@GetMapping("/users/{userID}")` will generate a the policy path `<policy_path>.GET.users.__userID`
+By default, the middleware extracts
+- the policy path is extracted from the rest controller mappings e.g. `@GetMapping("/users/{userID}")` will generate the policy path `<policy_path>.GET.users.__userID`
 - the resource context is not included by default in the authorization call. 
+The middleware does not extract the identity by default. You can easily configure an identity mapper by using one of the ones we provided or by creating your own.
+e.g.
+```java
+    @Bean
+    public IdentityMapper identityMapper() {
+        Extractor hostNameExtractor = new HeaderExtractor("authorization");
+        return new JwtIdentityMapper(hostNameExtractor);
+    }
+```
 
 ## Customizing the middleware
 
@@ -96,6 +115,36 @@ All you have to do is provide a bean that returns an instance that implement the
         return new JsonResourceMapper(bodyExtractor, new String[]{"email", "name", "aud"});
     }
 ```
+
+## Configuring the middleware for check calls
+The check call is a specialized is call. It allows us to specify an object type, an object id and a relation.
+e.g.
+
+```java
+    @Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .authorizeHttpRequests(authorize -> authorize
+            .requestMatchers(HttpMethod.GET, "/todos")
+            .access(new CheckConfig(authzCfg, "group", "viewer", "member").getAuthManager())
+        );
+    return http.build();
+}
+```
+
+### Method level authorization
+The check call can be used at a method level as well.
+e.g.
+```java
+    @GetMapping("/todos")
+    @PreAuthorize("@aserto.check('group', 'viewer', 'member')")
+    public String getTodo() {
+        return "Hello from route GET /todos";
+    }
+```
+The check call accept hard coded values or implementations of the [ObjectTypeMapper.java](src%2Fmain%2Fjava%2Fcom%2Faserto%2Fauthroizer%2Fmapper%2Fobject%2FObjectTypeMapper.java),
+[ObjectTypeMapper.java](src%2Fmain%2Fjava%2Fcom%2Faserto%2Fauthroizer%2Fmapper%2Fobject%2FObjectTypeMapper.java) and [RelationMapper.java](src%2Fmain%2Fjava%2Fcom%2Faserto%2Fauthroizer%2Fmapper%2Frelation%2FRelationMapper.java)
+interfaces
 
 ## Example
 

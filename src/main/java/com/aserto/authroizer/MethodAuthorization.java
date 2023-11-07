@@ -35,4 +35,10 @@ class MethodAuthorization {
         AuthorizationDecision decision = asertoAuthzManager.check(httpRequest, policyMapper, checkResourceMapper);
         return decision.isGranted();
     }
+
+    public boolean check() {
+        AuthorizationDecision decision = asertoAuthzManager.check(httpRequest);
+        return decision.isGranted();
+
+    }
 }

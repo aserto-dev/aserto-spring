@@ -49,7 +49,11 @@ public final class AsertoAuthorizationManager implements AuthorizationManager<Re
 
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
-        return this.check(context.getRequest(), configPolicyMapper, configResourceMapper);
+        return this.check(context.getRequest());
+    }
+
+    public AuthorizationDecision check(HttpServletRequest httpRequest) {
+        return this.check(httpRequest, configPolicyMapper, configResourceMapper);
     }
 
     public AuthorizationDecision check(HttpServletRequest httpRequest, PolicyMapper policyMapper, ResourceMapper resourceMapper) {
