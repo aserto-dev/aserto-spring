@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/*
+ * Provides methods to check if the current user is authorized to perform an action.
+ */
 public final class AsertoAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
     private final Logger log = LoggerFactory.getLogger(AsertoAuthorizationManager.class);
     private String authorizerDecision;
@@ -47,15 +50,34 @@ public final class AsertoAuthorizationManager implements AuthorizationManager<Re
         }
     }
 
+    /*
+    * Check if the current user is authorized to perform the action defined in the policy.
+    * The resource mapper and policy mappers that were set in the constructor are used.
+     */
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
         return this.check(context.getRequest());
     }
 
+    /*
+     * Check if the current user is authorized to perform the action defined in the policy.
+     * The resource mapper and policy mappers that were set in the constructor are used.
+     *
+     * @param httpRequest The http request
+     * @return true if the user is authorized, false otherwise
+     */
     public AuthorizationDecision check(HttpServletRequest httpRequest) {
         return this.check(httpRequest, configPolicyMapper, configResourceMapper);
     }
 
+    /*
+     * Check if the current user is authorized to perform the action defined in the policy.
+     *
+     * @param httpRequest The http request
+     * @param policyMapper The policy mapper
+     * @param resourceMapper The resource mapper
+     * @return true if the user is authorized, false otherwise
+     */
     public AuthorizationDecision check(HttpServletRequest httpRequest, PolicyMapper policyMapper, ResourceMapper resourceMapper) {
         if (!authorizerEnabled) {
             return new AuthorizationDecision(true);
@@ -89,6 +111,12 @@ public final class AsertoAuthorizationManager implements AuthorizationManager<Re
         return new AuthorizationDecision(isAllowed);
     }
 
+    /*
+    * Extract the first is result from a decision list.
+    *
+    * @param decisions The list of decisions
+    * @return true if the decision is allowed, false otherwise
+     */
     private boolean isAllowed(List<Decision> decisions) {
         for (Decision decision: decisions) {
             String dec = decision.getDecision();
