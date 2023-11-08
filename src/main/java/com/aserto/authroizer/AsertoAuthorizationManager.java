@@ -17,6 +17,7 @@ import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -94,9 +95,10 @@ public final class AsertoAuthorizationManager implements AuthorizationManager<Re
         }
 
         String policyPath = policyMapper.policyPath(httpRequest);
-        log.debug("Policy path is [{}]", policyPath);
+        log.debug("Policy path is [{}], policy name is [{}], policy label is [{}] and decision is [{}]", policyPath, policyName, policyLabel , authorizerDecision);
         PolicyCtx policyCtx = new PolicyCtx(policyName, policyLabel, policyPath, new String[]{ authorizerDecision });
         Map<String, Value> resourceCtx = resourceMapper.getResource(httpRequest);
+        log.debug("Resource context: [{}]", toResourceContextString(resourceCtx));
 
         boolean isAllowed = false;
         try {
@@ -109,6 +111,22 @@ public final class AsertoAuthorizationManager implements AuthorizationManager<Re
 
 
         return new AuthorizationDecision(isAllowed);
+    }
+
+    /*
+    * Convert a resource context to a string.
+    *
+    * @param resourceCtx The resource context
+    * @return The string representation of the resource context
+     */
+    private String toResourceContextString(Map<String, Value> resourceCtx) {
+        List<String> resourceContextStrings = new LinkedList<>();
+        for (Map.Entry<String, Value> entry : resourceCtx.entrySet()) {
+            String keyValuePair = String.format("%s:%s", entry.getKey(), entry.getValue().getStringValue());
+            resourceContextStrings.add(keyValuePair);
+        }
+
+        return String.join(", ", resourceContextStrings);
     }
 
     /*
