@@ -3,7 +3,7 @@ package com.aserto.authroizer.mapper.resource;
 import com.aserto.authroizer.mapper.extractor.Extractor;
 import com.google.protobuf.Struct;
 import com.google.protobuf.util.JsonFormat;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 import java.util.HashMap;

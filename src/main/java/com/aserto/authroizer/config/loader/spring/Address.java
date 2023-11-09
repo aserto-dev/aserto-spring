@@ -1,7 +1,16 @@
 package com.aserto.authroizer.config.loader.spring;
 
+/*
+* Used to parse the authorizer URL into host and port
+ */
 public class Address {
+    /*
+    * The host name or IP address of the authorizer service
+     */
     private String host;
+    /*
+    * The port number of the authorizer service
+     */
     private Integer port;
 
     public Address(String serviceUrl) {
