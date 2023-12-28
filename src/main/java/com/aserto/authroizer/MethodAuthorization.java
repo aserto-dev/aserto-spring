@@ -90,10 +90,10 @@ class MethodAuthorization {
         validateFields();
 
         StaticPolicyMapper policyMapper = new StaticPolicyMapper("rebac.check");
-        CheckResourceMapper checkResourceMapper = new CheckResourceMapper(objectTypeMapper, objectIdMapper, relationMapper);
+        CheckResourceMapper checkResourceMapper = new CheckResourceMapper(objectTypeMapper, objectIdMapper, relationMapper, subjectTypeMapper);
 
         AuthorizationDecision decision;
-        if (subjectIdMapper != null) {
+        if (subjectIdMapper != null && subjectTypeMapper != null) {
             ManualIdentityMapper identityMapper = new ManualIdentityMapper(subjectIdMapper.getValue(httpRequest));
             decision = asertoAuthzManager.check(httpRequest, identityMapper, policyMapper, checkResourceMapper);
         } else {

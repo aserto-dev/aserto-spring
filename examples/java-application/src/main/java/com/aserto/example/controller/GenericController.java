@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class GenericController {
     @DeleteMapping("/todos/{id}")
-//    @PreAuthorize("@check.objectType('group').objectId(new com.aserto.example.PathObjectIdMapper().fromAttribute('id')).relation('member').allowed()")    // we use a custom mapper that extracts the id from the path params
+//    @PreAuthorize("@check.objectType('group').objectId(new com.aserto.example.mapper.PathObjectIdMapper().fromAttribute('id')).relation('member').allowed()")    // we use a custom mapper that extracts the id from the path params
 //    @PreAuthorize("@check.objectType('group').objectId(@objIdMapper.fromAttribute('id')).relation('member').allowed()")   // we use a custom mapper that extracts the id from the path params
 //    @PreAuthorize("@check.objectType('group').objectId(#id).relation('member').allowed()")            // objectId is set to the id variable
 //    @PreAuthorize("@check.objectId(#id).relation('member').allowed()")                                // this should throw an exception as no objectType is set

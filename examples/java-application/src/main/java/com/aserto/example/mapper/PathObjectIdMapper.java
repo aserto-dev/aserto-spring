@@ -1,4 +1,4 @@
-package com.aserto.example;
+package com.aserto.example.mapper;
 
 import com.aserto.authroizer.mapper.check.object.ObjectIdMapper;
 import jakarta.servlet.http.HttpServletRequest;
