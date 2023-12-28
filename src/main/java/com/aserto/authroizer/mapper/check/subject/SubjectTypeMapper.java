@@ -1,7 +1,7 @@
-package com.aserto.authroizer.mapper.relation;
+package com.aserto.authroizer.mapper.check.subject;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-public interface RelationMapper {
+public interface SubjectTypeMapper {
     public String getValue(HttpServletRequest httpRequest);
 }

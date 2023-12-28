@@ -9,7 +9,8 @@ public class GenericController {
 //    @PreAuthorize("@check('group', new com.aserto.example.PathObjectIdMapper(#id), 'member')")
 //    @PreAuthorize("@check('group', @objIdMapper, 'member')")
 //    @PreAuthorize("@check('group', #id, 'member')")
-    @PreAuthorize("@check.objectType('group').objectId(#id).relation('member').allowed()")
+//    @PreAuthorize("@check.objectType('group').objectId(#id).relation('member').allowed()")
+    @PreAuthorize("@check.objectId(#id).relation('member').allowed()")
 //    @PreAuthorize("@check.objectType('group').objectId('admin').relation('member').allowed()")
     public String deleteTodo(@PathVariable String id) {
         return "Hello from route DELETE /todos/{" + id + "}";

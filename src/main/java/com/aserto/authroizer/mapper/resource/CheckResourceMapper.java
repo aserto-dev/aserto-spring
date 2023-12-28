@@ -1,11 +1,11 @@
 package com.aserto.authroizer.mapper.resource;
 
-import com.aserto.authroizer.mapper.object.ObjectIdMapper;
-import com.aserto.authroizer.mapper.object.ObjectTypeMapper;
-import com.aserto.authroizer.mapper.object.StaticObjectIdMapper;
-import com.aserto.authroizer.mapper.object.StaticObjectTypeMapper;
-import com.aserto.authroizer.mapper.relation.RelationMapper;
-import com.aserto.authroizer.mapper.relation.StaticRelationMapper;
+import com.aserto.authroizer.mapper.check.object.ObjectIdMapper;
+import com.aserto.authroizer.mapper.check.object.ObjectTypeMapper;
+import com.aserto.authroizer.mapper.check.object.StaticObjectIdMapper;
+import com.aserto.authroizer.mapper.check.object.StaticObjectTypeMapper;
+import com.aserto.authroizer.mapper.check.relation.RelationMapper;
+import com.aserto.authroizer.mapper.check.relation.StaticRelationMapper;
 import com.google.protobuf.Value;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -16,9 +16,6 @@ public class CheckResourceMapper implements ResourceMapper {
     private ObjectTypeMapper objectTypeMapper;
     private ObjectIdMapper objectIdMapper;
     private RelationMapper relationMapper;
-
-//    public CheckResourceMapper() {
-//    }
 
     public CheckResourceMapper(String objectType, String objectId, String relation) {
         this.objectTypeMapper = new StaticObjectTypeMapper(objectType);
@@ -31,31 +28,6 @@ public class CheckResourceMapper implements ResourceMapper {
         this.objectIdMapper = objectIdMapper;
         this.relationMapper = relationMapper;
     }
-//
-//    public void setObjectTypeMapper(ObjectTypeMapper objectTypeMapper) {
-//        this.objectTypeMapper = objectTypeMapper;
-//    }
-//
-//    public void setObjectType(String objectType) {
-//        this.objectTypeMapper = new StaticObjectTypeMapper(objectType);
-//    }
-//
-//    public void setObjectIdMapper(ObjectIdMapper objectIdMapper) {
-//        this.objectIdMapper = objectIdMapper;
-//    }
-//
-//    public void setObjectId(String objectId) {
-//        this.objectIdMapper = new StaticObjectIdMapper(objectId);
-//    }
-//
-//    public void setRelationMapper(RelationMapper relationMapper) {
-//        this.relationMapper = relationMapper;
-//    }
-//
-//    public void setRelation(String relation) {
-//        this.relationMapper = new StaticRelationMapper(relation);
-//    }
-
 
     @Override
     public Map<String, Value> getResource(HttpServletRequest request) throws ResourceMapperError {

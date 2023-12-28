@@ -1,12 +1,17 @@
 package com.aserto.authroizer;
 
-import com.aserto.authroizer.mapper.object.ObjectIdMapper;
-import com.aserto.authroizer.mapper.object.ObjectTypeMapper;
-import com.aserto.authroizer.mapper.object.StaticObjectIdMapper;
-import com.aserto.authroizer.mapper.object.StaticObjectTypeMapper;
-import com.aserto.authroizer.mapper.relation.RelationMapper;
+import com.aserto.authroizer.mapper.check.subject.StaticSubjectIdMapper;
+import com.aserto.authroizer.mapper.check.subject.StaticSubjectTypeMapper;
+import com.aserto.authroizer.mapper.check.subject.SubjectIdMapper;
+import com.aserto.authroizer.mapper.check.subject.SubjectTypeMapper;
+import com.aserto.authroizer.mapper.identity.ManualIdentityMapper;
+import com.aserto.authroizer.mapper.check.object.ObjectIdMapper;
+import com.aserto.authroizer.mapper.check.object.ObjectTypeMapper;
+import com.aserto.authroizer.mapper.check.object.StaticObjectIdMapper;
+import com.aserto.authroizer.mapper.check.object.StaticObjectTypeMapper;
+import com.aserto.authroizer.mapper.check.relation.RelationMapper;
 import com.aserto.authroizer.mapper.policy.StaticPolicyMapper;
-import com.aserto.authroizer.mapper.relation.StaticRelationMapper;
+import com.aserto.authroizer.mapper.check.relation.StaticRelationMapper;
 import com.aserto.authroizer.mapper.resource.CheckResourceMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authorization.AuthorizationDecision;
@@ -23,55 +28,13 @@ class MethodAuthorization {
     private ObjectTypeMapper objectTypeMapper;
     private ObjectIdMapper objectIdMapper;
     private RelationMapper relationMapper;
+    private SubjectTypeMapper subjectTypeMapper;
+    private SubjectIdMapper subjectIdMapper;
 
     public MethodAuthorization(AuthzConfig authzCfg, HttpServletRequest httpRequest) {
         asertoAuthzManager = new AsertoAuthorizationManager(authzCfg);
         this.httpRequest = httpRequest;
     }
-
-
-//    /*
-//    * Check if the current user is authorized to perform the action defined in the policy.
-//    * @return true if the user is authorized, false otherwise
-//     */
-//    public boolean check() {
-//        AuthorizationDecision decision = asertoAuthzManager.check(httpRequest);
-//        return decision.isGranted();
-//    }
-//
-//    /*
-//    * Check if the current user has a relation to the object defined by ObjectType, ObjectId and Relation.
-//    * If the relation exists, the user is authorized.
-//    *
-//    * @param objectType The type of the object
-//    * @param objectId The id of the object
-//    * @param relation The relation to check
-//    * @return true if the user is authorized, false otherwise
-//     */
-//    public boolean check(String objectType, String objectId, String relation) {
-//        StaticPolicyMapper policyMapper = new StaticPolicyMapper("rebac.check");
-//        CheckResourceMapper checkResourceMapper = new CheckResourceMapper(objectType, objectId, relation);
-//
-//        AuthorizationDecision decision = asertoAuthzManager.check(httpRequest, policyMapper, checkResourceMapper);
-//        return decision.isGranted();
-//    }
-//
-//    /*
-//     * Check if the current user has a relation to the object defined by objectTypeMapper, ObjectIdMapper and RelationMapper.
-//     * If the relation exists, the user is authorized.
-//     *
-//     * @param objectTypeMapper The mapper for the type of the object
-//     * @param objectIdMapper The mapper for the id of the object
-//     * @param relationMapper The mapper for the relation to check
-//     * @return true if the user is authorized, false otherwise
-//     */
-//    public boolean check(ObjectTypeMapper objectTypeMapper, ObjectIdMapper objectIdMapper, RelationMapper relationMapper) {
-//        StaticPolicyMapper policyMapper = new StaticPolicyMapper("rebac.check");
-//        CheckResourceMapper checkResourceMapper = new CheckResourceMapper(objectTypeMapper, objectIdMapper, relationMapper);
-//
-//        AuthorizationDecision decision = asertoAuthzManager.check(httpRequest, policyMapper, checkResourceMapper);
-//        return decision.isGranted();
-//    }
 
     public MethodAuthorization objectType(String objectType) {
         objectTypeMapper = new StaticObjectTypeMapper(objectType);
@@ -103,11 +66,52 @@ class MethodAuthorization {
         return this;
     }
 
+    public MethodAuthorization subjectType(String subjectType) {
+        subjectTypeMapper = new StaticSubjectTypeMapper(subjectType);
+        return this;
+    }
+
+    public MethodAuthorization subjectType(SubjectTypeMapper subjectTypeMapper) {
+        this.subjectTypeMapper = subjectTypeMapper;
+        return this;
+    }
+
+    public MethodAuthorization subjectId(String subjectId) {
+        subjectIdMapper = new StaticSubjectIdMapper(subjectId);
+        return this;
+    }
+
+    public MethodAuthorization subjectId(SubjectIdMapper subjectIdMapper) {
+        this.subjectIdMapper = subjectIdMapper;
+        return this;
+    }
+
     public boolean allowed() {
+        validateFields();
+
         StaticPolicyMapper policyMapper = new StaticPolicyMapper("rebac.check");
         CheckResourceMapper checkResourceMapper = new CheckResourceMapper(objectTypeMapper, objectIdMapper, relationMapper);
 
-        AuthorizationDecision decision = asertoAuthzManager.check(httpRequest, policyMapper, checkResourceMapper);
+        AuthorizationDecision decision;
+        if (subjectIdMapper != null) {
+            ManualIdentityMapper identityMapper = new ManualIdentityMapper(subjectIdMapper.getValue(httpRequest));
+            decision = asertoAuthzManager.check(httpRequest, identityMapper, policyMapper, checkResourceMapper);
+        } else {
+            decision = asertoAuthzManager.check(httpRequest, policyMapper, checkResourceMapper);
+        }
+
         return decision.isGranted();
+    }
+
+    private void validateFields() {
+        if (objectTypeMapper == null) {
+            throw new IllegalArgumentException("objectType must be set");
+        }
+        if (objectIdMapper == null) {
+            throw new IllegalArgumentException("objectId must be set");
+        }
+        if (relationMapper == null) {
+            throw new IllegalArgumentException("relation must be set");
+        }
     }
 }
