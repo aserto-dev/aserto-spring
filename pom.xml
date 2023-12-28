@@ -11,7 +11,7 @@
 
 	<groupId>com.aserto</groupId>
 	<artifactId>aserto-spring</artifactId>
-	<version>0.0.12</version>
+	<version>0.0.13</version>
 
 	<name>spring-middleware</name>
 	<description>Spring Security Filter that enables Aserto authorization</description>
@@ -64,20 +64,20 @@
 		<dependency>
 			<groupId>com.nimbusds</groupId>
 			<artifactId>nimbus-jose-jwt</artifactId>
-			<version>9.37</version>
+			<version>9.37.3</version>
 		</dependency>
 
 		<!-- use to convert json to proto -->
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java-util</artifactId>
-			<version>3.24.4</version>
+			<version>3.25.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.aserto</groupId>
 			<artifactId>aserto-java</artifactId>
-			<version>0.20.9</version>
+			<version>0.20.11</version>
 		</dependency>
 
 		<dependency>

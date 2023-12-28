@@ -1,7 +1,7 @@
 package com.aserto.authroizer;
 
 import com.aserto.AuthorizerClient;
-import com.aserto.AuthzClient;
+import com.aserto.authorizer.AuthzClient;
 import com.aserto.ChannelBuilder;
 import com.aserto.authroizer.config.loader.spring.AuhorizerLoader;
 import com.aserto.authroizer.mapper.identity.IdentityMapper;

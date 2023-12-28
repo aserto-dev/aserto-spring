@@ -17,10 +17,12 @@ public class CheckResourceMapper implements ResourceMapper {
     private ObjectIdMapper objectIdMapper;
     private RelationMapper relationMapper;
 
+//    public CheckResourceMapper() {
+//    }
 
-    public CheckResourceMapper(String objectType, String objectKey, String relation) {
+    public CheckResourceMapper(String objectType, String objectId, String relation) {
         this.objectTypeMapper = new StaticObjectTypeMapper(objectType);
-        this.objectIdMapper = new StaticObjectIdMapper(objectKey);
+        this.objectIdMapper = new StaticObjectIdMapper(objectId);
         this.relationMapper = new StaticRelationMapper(relation);
     }
 
@@ -29,6 +31,31 @@ public class CheckResourceMapper implements ResourceMapper {
         this.objectIdMapper = objectIdMapper;
         this.relationMapper = relationMapper;
     }
+//
+//    public void setObjectTypeMapper(ObjectTypeMapper objectTypeMapper) {
+//        this.objectTypeMapper = objectTypeMapper;
+//    }
+//
+//    public void setObjectType(String objectType) {
+//        this.objectTypeMapper = new StaticObjectTypeMapper(objectType);
+//    }
+//
+//    public void setObjectIdMapper(ObjectIdMapper objectIdMapper) {
+//        this.objectIdMapper = objectIdMapper;
+//    }
+//
+//    public void setObjectId(String objectId) {
+//        this.objectIdMapper = new StaticObjectIdMapper(objectId);
+//    }
+//
+//    public void setRelationMapper(RelationMapper relationMapper) {
+//        this.relationMapper = relationMapper;
+//    }
+//
+//    public void setRelation(String relation) {
+//        this.relationMapper = new StaticRelationMapper(relation);
+//    }
+
 
     @Override
     public Map<String, Value> getResource(HttpServletRequest request) throws ResourceMapperError {
