@@ -5,7 +5,7 @@ import com.aserto.model.IdentityCtx;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class ManualIdentityMapper implements IdentityMapper {
-    private String identity;
+    private final String identity;
     public ManualIdentityMapper(String identity) {
         this.identity = identity;
     }

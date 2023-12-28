@@ -10,17 +10,16 @@ import java.util.Map;
 
 @Component("objIdMapper")
 public class PathObjectIdMapper implements ObjectIdMapper {
-//    private String id;
-//
-//    public PathObjectIdMapper setId(String id) {
-//        this.id = id;
-//        return this;
-//    }
+    private String attributeName;
+
+    public PathObjectIdMapper fromAttribute(String attributeName) {
+        this.attributeName = attributeName;
+        return this;
+    }
 
     @Override
     public String getValue(HttpServletRequest httpRequest) {
         Map<String, String> pathAttributes = (Map<String, String>)httpRequest.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-        return pathAttributes.get("id");
-//        return id;
+        return pathAttributes.get(attributeName);
     }
 }
