@@ -11,7 +11,7 @@
 
 	<groupId>com.aserto</groupId>
 	<artifactId>aserto-spring</artifactId>
-	<version>0.0.13</version>
+	<version>0.1.0</version>
 
 	<name>spring-middleware</name>
 	<description>Spring Security Filter that enables Aserto authorization</description>
