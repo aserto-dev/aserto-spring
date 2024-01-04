@@ -1,12 +1,12 @@
 package com.aserto.authroizer;
 
-import com.aserto.authroizer.mapper.object.ObjectIdMapper;
-import com.aserto.authroizer.mapper.object.ObjectTypeMapper;
-import com.aserto.authroizer.mapper.object.StaticObjectIdMapper;
-import com.aserto.authroizer.mapper.object.StaticObjectTypeMapper;
-import com.aserto.authroizer.mapper.relation.RelationMapper;
+import com.aserto.authroizer.mapper.check.object.ObjectIdMapper;
+import com.aserto.authroizer.mapper.check.object.ObjectTypeMapper;
+import com.aserto.authroizer.mapper.check.object.StaticObjectIdMapper;
+import com.aserto.authroizer.mapper.check.object.StaticObjectTypeMapper;
+import com.aserto.authroizer.mapper.check.relation.RelationMapper;
 import com.aserto.authroizer.mapper.policy.StaticPolicyMapper;
-import com.aserto.authroizer.mapper.relation.StaticRelationMapper;
+import com.aserto.authroizer.mapper.check.relation.StaticRelationMapper;
 import com.aserto.authroizer.mapper.resource.CheckResourceMapper;
 
 public class CheckConfig {

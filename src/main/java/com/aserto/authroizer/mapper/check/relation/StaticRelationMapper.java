@@ -1,4 +1,4 @@
-package com.aserto.authroizer.mapper.relation;
+package com.aserto.authroizer.mapper.check.relation;
 
 import jakarta.servlet.http.HttpServletRequest;
 

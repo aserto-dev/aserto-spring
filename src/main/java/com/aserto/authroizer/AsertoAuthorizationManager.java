@@ -31,13 +31,13 @@ public final class AsertoAuthorizationManager implements AuthorizationManager<Re
     private String policyName;
     private String policyLabel;
     boolean authorizerEnabled;
-    private IdentityMapper identityMapper;
+    private IdentityMapper configIdentityMapper;
     private PolicyMapper configPolicyMapper;
     private ResourceMapper configResourceMapper;
     private AuthorizerClient authzClient;
 
     public AsertoAuthorizationManager(AuthzConfig authzConfig) {
-        this.identityMapper = authzConfig.getIdentityMapper();
+        this.configIdentityMapper = authzConfig.getIdentityMapper();
         this.configPolicyMapper = authzConfig.getPolicyMapper();
         this.configResourceMapper = authzConfig.getResourceMapper();
         this.authzClient = authzConfig.getAuthzClient();
@@ -80,6 +80,19 @@ public final class AsertoAuthorizationManager implements AuthorizationManager<Re
      * @return true if the user is authorized, false otherwise
      */
     public AuthorizationDecision check(HttpServletRequest httpRequest, PolicyMapper policyMapper, ResourceMapper resourceMapper) {
+        return this.check(httpRequest, configIdentityMapper, policyMapper, resourceMapper);
+    }
+
+    /*
+     * Check if the current user is authorized to perform the action defined in the policy.
+     *
+     * @param httpRequest The http request
+     * @param identityMapper The identity mapper
+     * @param policyMapper The policy mapper
+     * @param resourceMapper The resource mapper
+     * @return true if the user is authorized, false otherwise
+     */
+    public AuthorizationDecision check(HttpServletRequest httpRequest, IdentityMapper identityMapper, PolicyMapper policyMapper, ResourceMapper resourceMapper) {
         if (!authorizerEnabled) {
             return new AuthorizationDecision(true);
         }
