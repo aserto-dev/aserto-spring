@@ -77,7 +77,7 @@
 		<dependency>
 			<groupId>com.aserto</groupId>
 			<artifactId>aserto-java</artifactId>
-			<version>0.20.11</version>
+			<version>0.21.1</version>
 		</dependency>
 
 		<dependency>
