@@ -39,6 +39,7 @@ public class HttpPathPolicyMapper implements PolicyMapper {
             if (tokens[i].startsWith("{") && tokens[i].endsWith("}")) {
                 tokens[i] = "__" + tokens[i].substring(1, tokens[i].length() - 1);
             }
+            tokens[i] = tokens[i].replaceAll("-", "_");
         }
 
         return policyRoot + "." + method.toUpperCase()  + "." + String.join(".", tokens);

@@ -118,7 +118,7 @@ public final class AsertoAuthorizationManager implements AuthorizationManager<Re
             List<Decision> decisions = authzClient.is(identityCtx, policyCtx, resourceCtx);
             isAllowed = isAllowed(decisions);
         } catch (Exception e) {
-            log.error("Is call failed [{}]",  e.getMessage());
+            log.error("Is call failed",  e);
             return new AuthorizationDecision(false);
         }
 
