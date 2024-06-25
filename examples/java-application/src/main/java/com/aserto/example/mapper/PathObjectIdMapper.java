@@ -1,6 +1,6 @@
 package com.aserto.example.mapper;
 
-import com.aserto.authroizer.mapper.check.object.ObjectIdMapper;
+import com.aserto.authorizer.mapper.check.object.ObjectIdMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerMapping;

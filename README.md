@@ -2,16 +2,16 @@
 
 # aserto-spring
 Aserto authorization filter for Spring Security.
-`aserto-spring` impements middleware for Spring Security that uses the [Aserto](https://aserto.com) authorizer.
+`aserto-spring` implements middleware for Spring Security that uses the [Aserto](https://aserto.com) authorizer.
 
-The package adds a spring security filter that intercepts requests. Once a request is intercepted an authroization call
+The package adds a spring security filter that intercepts requests. Once a request is intercepted an authorization call
 is made to the Aserto Authorizer. Is the request is authorized it is allowed to continue, otherwise a 401 is returned.
 
 Built on top of the [Aserto Java SDK](https://github.com/aserto-dev/aserto-java)
 
 ## Prerequisites
 - Java 17  or newer
-- Spring Boot 3.1.5 or newer
+- Spring Boot 3.1.12 or newer
 - Spring Security 6.1.5 or newer
 
 ## Building
@@ -142,8 +142,8 @@ e.g.
         return "Hello from route GET /todos";
     }
 ```
-The check call accept hard coded values or implementations of the [ObjectTypeMapper.java](src%2Fmain%2Fjava%2Fcom%2Faserto%2Fauthroizer%2Fmapper%2Fobject%2FObjectTypeMapper.java),
-[ObjectTypeMapper.java](src%2Fmain%2Fjava%2Fcom%2Faserto%2Fauthroizer%2Fmapper%2Fobject%2FObjectTypeMapper.java) and [RelationMapper.java](src%2Fmain%2Fjava%2Fcom%2Faserto%2Fauthroizer%2Fmapper%2Frelation%2FRelationMapper.java)
+The check call accept hard coded values or implementations of the [ObjectTypeMapper.java](src%2Fmain%2Fjava%2Fcom%2Faserto%2Fauthorizer%2Fmapper%2Fobject%2FObjectTypeMapper.java),
+[ObjectTypeMapper.java](src%2Fmain%2Fjava%2Fcom%2Faserto%2Fauthorizer%2Fmapper%2Fobject%2FObjectTypeMapper.java) and [RelationMapper.java](src%2Fmain%2Fjava%2Fcom%2Faserto%2Fauthorizer%2Fmapper%2Frelation%2FRelationMapper.java)
 interfaces
 
 ## Example
