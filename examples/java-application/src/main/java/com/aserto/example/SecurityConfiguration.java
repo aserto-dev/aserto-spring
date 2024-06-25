@@ -1,7 +1,7 @@
 package com.aserto.example;
 
-import com.aserto.authroizer.AuthzConfig;
-import com.aserto.authroizer.CheckConfig;
+import com.aserto.authorizer.AuthzConfig;
+import com.aserto.authorizer.CheckConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

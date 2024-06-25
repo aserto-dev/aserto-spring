@@ -1,9 +1,9 @@
 package com.aserto.example.security;
 
-import com.aserto.authroizer.mapper.extractor.Extractor;
-import com.aserto.authroizer.mapper.extractor.HeaderExtractor;
-import com.aserto.authroizer.mapper.identity.IdentityMapper;
-import com.aserto.authroizer.mapper.identity.JwtIdentityMapper;
+import com.aserto.authorizer.mapper.extractor.Extractor;
+import com.aserto.authorizer.mapper.extractor.HeaderExtractor;
+import com.aserto.authorizer.mapper.identity.IdentityMapper;
+import com.aserto.authorizer.mapper.identity.JwtIdentityMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
