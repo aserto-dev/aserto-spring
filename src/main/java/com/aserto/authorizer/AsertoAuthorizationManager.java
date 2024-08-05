@@ -5,6 +5,7 @@ import com.aserto.authorizer.mapper.identity.IdentityMapper;
 import com.aserto.authorizer.mapper.identity.InvalidIdentity;
 import com.aserto.authorizer.mapper.policy.PolicyMapper;
 import com.aserto.authorizer.mapper.resource.ResourceMapper;
+import com.aserto.authorizer.mapper.resource.ResourceMapperError;
 import com.aserto.authorizer.v2.Decision;
 import com.aserto.model.IdentityCtx;
 import com.aserto.model.PolicyCtx;
@@ -110,8 +111,16 @@ public final class AsertoAuthorizationManager implements AuthorizationManager<Re
         String policyPath = policyMapper.policyPath(httpRequest);
         log.debug("Policy path is [{}], policy name is [{}], policy label is [{}] and decision is [{}]", policyPath, policyName, policyLabel , authorizerDecision);
         PolicyCtx policyCtx = new PolicyCtx(policyName, policyLabel, policyPath, new String[]{ authorizerDecision });
-        Map<String, Value> resourceCtx = resourceMapper.getResource(httpRequest);
-        log.debug("Resource context: [{}]", toResourceContextString(resourceCtx));
+
+        Map<String, Value> resourceCtx;
+
+        try {
+            resourceCtx = resourceMapper.getResource(httpRequest);
+            log.debug("Resource context: [{}]", toResourceContextString(resourceCtx));
+        } catch (ResourceMapperError e) {
+            log.error("Resource mapper error [{}]. Authorization denied.", e.getMessage());
+            return new AuthorizationDecision(false);
+        }
 
         boolean isAllowed = false;
         try {
