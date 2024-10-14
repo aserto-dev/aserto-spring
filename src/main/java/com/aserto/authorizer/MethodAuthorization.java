@@ -15,6 +15,7 @@ import com.aserto.authorizer.mapper.check.subject.StaticSubjectTypeMapper;
 import com.aserto.authorizer.mapper.check.subject.SubjectIdMapper;
 import com.aserto.authorizer.mapper.check.subject.SubjectTypeMapper;
 import com.aserto.authorizer.mapper.identity.ManualIdentityMapper;
+import com.aserto.authorizer.mapper.policy.PolicyMapper;
 import com.aserto.authorizer.mapper.policy.StaticPolicyMapper;
 import com.aserto.authorizer.mapper.resource.CheckResourceMapper;
 
@@ -31,10 +32,12 @@ class MethodAuthorization {
     private RelationMapper relationMapper;
     private SubjectTypeMapper subjectTypeMapper;
     private SubjectIdMapper subjectIdMapper;
+	private PolicyMapper policyMapper;
 
     public MethodAuthorization(AuthzConfig authzCfg, HttpServletRequest httpRequest) {
         asertoAuthzManager = new AsertoAuthorizationManager(authzCfg);
         this.httpRequest = httpRequest;
+		this.policyMapper = new StaticPolicyMapper("rebac.check");
     }
 
     public MethodAuthorization objectType(String objectType) {
@@ -87,10 +90,19 @@ class MethodAuthorization {
         return this;
     }
 
+    public MethodAuthorization policyPath(String policyPath) {
+        this.policyMapper = new StaticPolicyMapper(policyPath);
+        return this;
+    }
+
+    public MethodAuthorization policyMapper(PolicyMapper policyMapper) {
+        this.policyMapper = policyMapper;
+        return this;
+    }
+
     public boolean allowed() {
         validateFields();
 
-        StaticPolicyMapper policyMapper = new StaticPolicyMapper("rebac.check");
         CheckResourceMapper checkResourceMapper = new CheckResourceMapper(objectTypeMapper, objectIdMapper, relationMapper, subjectTypeMapper);
 
         AuthorizationDecision decision;
