@@ -1,6 +1,5 @@
 package com.aserto.authorizer;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +14,13 @@ import com.aserto.authorizer.mapper.check.subject.StaticSubjectTypeMapper;
 import com.aserto.authorizer.mapper.check.subject.SubjectIdMapper;
 import com.aserto.authorizer.mapper.check.subject.SubjectTypeMapper;
 import com.aserto.authorizer.mapper.identity.ManualIdentityMapper;
+import com.aserto.authorizer.mapper.policy.PolicyMapper;
 import com.aserto.authorizer.mapper.policy.StaticPolicyMapper;
 import com.aserto.authorizer.mapper.resource.CheckResourceMapper;
+import com.aserto.authorizer.mapper.resource.EmptyResourceMapper;
+import com.aserto.authorizer.mapper.resource.ResourceMapper;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /*
 * This class provides methods to check if the current user is authorized to perform an action.
@@ -24,17 +28,21 @@ import com.aserto.authorizer.mapper.resource.CheckResourceMapper;
  */
 @Component("check")
 class MethodAuthorization {
-    private AsertoAuthorizationManager asertoAuthzManager;
-    private HttpServletRequest httpRequest;
+    private final AsertoAuthorizationManager asertoAuthzManager;
+    private final HttpServletRequest httpRequest;
     private ObjectTypeMapper objectTypeMapper;
     private ObjectIdMapper objectIdMapper;
     private RelationMapper relationMapper;
     private SubjectTypeMapper subjectTypeMapper;
     private SubjectIdMapper subjectIdMapper;
+    private PolicyMapper policyMapper;
+    private ResourceMapper baseResourceMapper;
 
     public MethodAuthorization(AuthzConfig authzCfg, HttpServletRequest httpRequest) {
         asertoAuthzManager = new AsertoAuthorizationManager(authzCfg);
         this.httpRequest = httpRequest;
+        this.policyMapper = new StaticPolicyMapper("rebac.check");
+        this.baseResourceMapper = new EmptyResourceMapper();
     }
 
     public MethodAuthorization objectType(String objectType) {
@@ -87,11 +95,31 @@ class MethodAuthorization {
         return this;
     }
 
+    public MethodAuthorization policyPath(String policyPath) {
+        this.policyMapper = new StaticPolicyMapper(policyPath);
+        return this;
+    }
+
+    public MethodAuthorization policyMapper(PolicyMapper policyMapper) {
+        this.policyMapper = policyMapper;
+        return this;
+    }
+
+    public MethodAuthorization baseResourceMapper(ResourceMapper baseResourceMapper) {
+        this.baseResourceMapper = baseResourceMapper;
+        return this;
+    }
+
     public boolean allowed() {
         validateFields();
 
-        StaticPolicyMapper policyMapper = new StaticPolicyMapper("rebac.check");
-        CheckResourceMapper checkResourceMapper = new CheckResourceMapper(objectTypeMapper, objectIdMapper, relationMapper, subjectTypeMapper);
+        CheckResourceMapper checkResourceMapper = new CheckResourceMapper(
+            objectTypeMapper,
+            objectIdMapper,
+            relationMapper,
+            subjectTypeMapper,
+            baseResourceMapper
+        );
 
         AuthorizationDecision decision;
         if (subjectIdMapper != null && subjectTypeMapper != null) {

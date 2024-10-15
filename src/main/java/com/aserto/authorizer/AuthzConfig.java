@@ -17,6 +17,12 @@ public class AuthzConfig {
     @Value("${aserto.authorizer.policyName:}")
     private String policyName;
 
+    /**
+     * Policy instance label
+     *
+     * @deprecated no longer used.
+     */
+    @Deprecated
     @Value("${aserto.authorizer.policyLabel:}")
     private String policyLabel;
 
@@ -41,7 +47,7 @@ public class AuthzConfig {
     public AuthzConfig(AuthzConfig authzConfig) {
         this.authorizerDecision = authzConfig.getAuthorizerDecision();
         this.policyName = authzConfig.getPolicyName();
-        this.policyLabel = authzConfig.getPolicyLabel();
+        this.policyLabel = authzConfig.getPolicyName();
         this.authorizerEnabled = authzConfig.isAuthorizerEnabled();
         this.identityMapper = authzConfig.getIdentityMapper();
         this.policyMapper = authzConfig.getPolicyMapper();
@@ -65,10 +71,21 @@ public class AuthzConfig {
         this.policyName = policyName;
     }
 
+    /**
+     * Returns the policy instance label
+     *
+     * @deprecated no longer used.
+     */
+    @Deprecated
     public String getPolicyLabel() {
         return policyLabel;
     }
 
+    /**
+     * Sets the policy instance label
+     *
+     * @deprecated no longer used.
+     */
     public void setPolicyLabel(String policyLabel) {
         this.policyLabel = policyLabel;
     }

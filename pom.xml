@@ -11,7 +11,7 @@
 
 	<groupId>com.aserto</groupId>
 	<artifactId>aserto-spring</artifactId>
-	<version>0.2.3</version>
+	<version>0.2.4</version>
 
 	<name>spring-middleware</name>
 	<description>Spring Security Filter that enables Aserto authorization</description>
@@ -48,7 +48,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<protobuf.version>3.25.3</protobuf.version>
-		<aserto-java.version>0.31.1</aserto-java.version>
+		<aserto-java.version>0.31.3</aserto-java.version>
 	</properties>
 
 	<dependencies>

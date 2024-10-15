@@ -1,17 +1,18 @@
 package com.aserto.authorizer.mapper.resource;
 
-import com.google.protobuf.Value;
-import jakarta.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.condition.PathPatternsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.protobuf.Value;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 public class PathParamsResourceMapper implements ResourceMapper {
     private final RequestMappingHandlerMapping handlerMapping;
@@ -23,7 +24,7 @@ public class PathParamsResourceMapper implements ResourceMapper {
     public Map<String, Value> getResource(HttpServletRequest request) throws ResourceMapperError {
         String uri = request.getRequestURI();
         AntPathMatcher apm = new AntPathMatcher();
-        String pattern = "";
+        String pattern;
         for (Map.Entry<RequestMappingInfo, HandlerMethod> mappingInfo : handlerMapping.getHandlerMethods().entrySet()) {
             PathPatternsRequestCondition pathPatternsCondition = mappingInfo.getKey().getPathPatternsCondition();
             if (pathPatternsCondition == null) {
@@ -51,7 +52,7 @@ public class PathParamsResourceMapper implements ResourceMapper {
     }
 
     public String[] getPathParams(String uri) {
-        List<String> params = new ArrayList<>();
+        ArrayList<String> params = new ArrayList<>();
         String[] tokens = uri.split("/");
         for (String token : tokens) {
             if (token.startsWith("{") && token.endsWith("}")) {
@@ -59,6 +60,8 @@ public class PathParamsResourceMapper implements ResourceMapper {
             }
         }
 
-        return params.toArray(new String[0]);
+        String[] pathParams = new String[params.size()];
+        params.toArray(pathParams);
+        return pathParams;
     }
 }

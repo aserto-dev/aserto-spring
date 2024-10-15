@@ -7,8 +7,8 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan("com.aserto")
 public class JavaApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(JavaApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(JavaApplication.class, args);
+    }
 
 }

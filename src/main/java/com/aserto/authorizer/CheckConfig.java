@@ -6,64 +6,161 @@ import com.aserto.authorizer.mapper.check.object.StaticObjectIdMapper;
 import com.aserto.authorizer.mapper.check.object.StaticObjectTypeMapper;
 import com.aserto.authorizer.mapper.check.relation.RelationMapper;
 import com.aserto.authorizer.mapper.check.relation.StaticRelationMapper;
+import com.aserto.authorizer.mapper.policy.PolicyMapper;
 import com.aserto.authorizer.mapper.policy.StaticPolicyMapper;
 import com.aserto.authorizer.mapper.resource.CheckResourceMapper;
+import com.aserto.authorizer.mapper.resource.EmptyResourceMapper;
+import com.aserto.authorizer.mapper.resource.ResourceMapper;
 
 public class CheckConfig {
-    private AuthzConfig authzCfg;
+    private final AuthzConfig authzCfg;
 
-    private ObjectTypeMapper objectTypeMapper;
-    private ObjectIdMapper objectIdMapper;
-    private RelationMapper relationMapper;
+    private final ObjectTypeMapper objectTypeMapper;
+    private final ObjectIdMapper objectIdMapper;
+    private final RelationMapper relationMapper;
+    private final PolicyMapper policyMapper;
+    /**
+     * ResourceMapper for additional fields to be included in the resource context.
+     */
+    private final ResourceMapper baseResourceMapper;
 
-    public CheckConfig(AuthzConfig authzCfg) {
-        // Clone the authz config because we will change it
-        this.authzCfg = new AuthzConfig(authzCfg);
+    static final String DEFAULT_POLICY = "rebac.check";
+
+    public CheckConfig(
+        AuthzConfig filterConfig,
+        String objectType,
+        String objectID,
+        String relation
+    ) {
+        this(filterConfig, objectType, objectID, relation, DEFAULT_POLICY);
     }
 
-    public CheckConfig(AuthzConfig filterConfig, String objectType, String objectKey, String relation) {
-        this.authzCfg = new AuthzConfig(filterConfig);
+    public CheckConfig(
+        AuthzConfig filterConfig,
+        String objectType,
+        String objectID,
+        String relation,
+        String policy
+    ) {
+        this(filterConfig, objectType, objectID, relation, policy, new EmptyResourceMapper());
+    }
 
-        this.objectTypeMapper = new StaticObjectTypeMapper(objectType);
-        this.objectIdMapper = new StaticObjectIdMapper(objectKey);
-        this.relationMapper = new StaticRelationMapper(relation);
+    public CheckConfig(
+        AuthzConfig filterConfig,
+        String objectType,
+        String objectID,
+        String relation,
+        ResourceMapper baseResourceMapper
+    ) {
+        this(filterConfig, objectType, objectID, relation, DEFAULT_POLICY, baseResourceMapper);
+    }
+
+    public CheckConfig(
+        AuthzConfig filterConfig,
+        String objectType,
+        String objectID,
+        String relation,
+        String policy,
+        ResourceMapper baseResourceMapper
+    ) {
+        this(
+            filterConfig,
+            new StaticObjectTypeMapper(objectType),
+            new StaticObjectIdMapper(objectID),
+            new StaticRelationMapper(relation),
+            new StaticPolicyMapper(policy),
+            baseResourceMapper
+        );
+    }
+
+    public CheckConfig(AuthzConfig filterConfig, String objectType, ObjectIdMapper objectIdMapper, String relation) {
+        this(filterConfig, objectType, objectIdMapper, relation, DEFAULT_POLICY);
+    }
+
+    public CheckConfig(AuthzConfig filterConfig, String objectType, ObjectIdMapper objectIdMapper, String relation, String policy) {
+        this(
+            filterConfig,
+            new StaticObjectTypeMapper(objectType),
+            objectIdMapper,
+            new StaticRelationMapper(relation),
+            new StaticPolicyMapper(policy),
+            new EmptyResourceMapper()
+        );
+    }
+
+    public CheckConfig(
+        AuthzConfig filterConfig,
+        String objectType,
+        ObjectIdMapper objectIdMapper,
+        String relation,
+        ResourceMapper baseResourceMapper
+    ) {
+        this(
+            filterConfig,
+            new StaticObjectTypeMapper(objectType),
+            objectIdMapper,
+            new StaticRelationMapper(relation),
+            new StaticPolicyMapper(DEFAULT_POLICY),
+            new EmptyResourceMapper()
+        );
+    }
+
+    public CheckConfig(
+        AuthzConfig filterConfig,
+        String objectType,
+        ObjectIdMapper objectIdMapper,
+        String relation,
+        String policy,
+        ResourceMapper baseResourceMapper
+    ) {
+        this(
+            filterConfig,
+            new StaticObjectTypeMapper(objectType),
+            objectIdMapper,
+            new StaticRelationMapper(relation),
+            new StaticPolicyMapper(policy),
+            baseResourceMapper
+        );
     }
 
     public CheckConfig(AuthzConfig filterConfig, ObjectTypeMapper objectTypeMapper, ObjectIdMapper objectIdMapper, RelationMapper relationMapper) {
+        this(filterConfig, objectTypeMapper, objectIdMapper, relationMapper, new StaticPolicyMapper(DEFAULT_POLICY));
+    }
+
+    public CheckConfig(
+        AuthzConfig filterConfig,
+        ObjectTypeMapper objectTypeMapper,
+        ObjectIdMapper objectIdMapper,
+        RelationMapper relationMapper,
+        PolicyMapper policyMapper
+    ) {
+        this(filterConfig, objectTypeMapper, objectIdMapper, relationMapper, policyMapper, new EmptyResourceMapper());
+    }
+
+    public CheckConfig(
+        AuthzConfig filterConfig,
+        ObjectTypeMapper objectTypeMapper,
+        ObjectIdMapper objectIdMapper,
+        RelationMapper relationMapper,
+        ResourceMapper baseResourceMapper
+    ) {
+        this(filterConfig, objectTypeMapper, objectIdMapper, relationMapper, new StaticPolicyMapper(DEFAULT_POLICY), new EmptyResourceMapper());
+    }
+
+    public CheckConfig(
+        AuthzConfig filterConfig,
+        ObjectTypeMapper objectTypeMapper,
+        ObjectIdMapper objectIdMapper,
+        RelationMapper relationMapper,
+        PolicyMapper policyMapper,
+        ResourceMapper baseResourceMapper
+    ) {
         this.authzCfg = new AuthzConfig(filterConfig);
         this.objectTypeMapper = objectTypeMapper;
         this.objectIdMapper = objectIdMapper;
         this.relationMapper = relationMapper;
-    }
-
-    public CheckConfig setObjectType(String objectType) {
-        this.objectTypeMapper = new StaticObjectTypeMapper(objectType);
-        return this;
-    }
-
-    public CheckConfig setObjectTypeMapper(ObjectTypeMapper objectTypeMapper) {
-        this.objectTypeMapper = objectTypeMapper;
-        return this;
-    }
-
-    public CheckConfig setObjectKey(String objectKey) {
-        this.objectIdMapper = new StaticObjectIdMapper(objectKey);
-        return this;
-    }
-
-    public CheckConfig setObjectIdMapper(ObjectIdMapper objectIdMapper) {
-        this.objectIdMapper = objectIdMapper;
-        return this;
-    }
-
-    public CheckConfig setRelation(String relation) {
-        this.relationMapper = new StaticRelationMapper(relation);
-        return this;
-    }
-
-    public CheckConfig setRelationMapper(RelationMapper relationMapper) {
-        this.relationMapper = relationMapper;
-        return this;
+        this.policyMapper = policyMapper;
+        this.baseResourceMapper = baseResourceMapper != null ? baseResourceMapper : new EmptyResourceMapper();
     }
 
     public AsertoAuthorizationManager getAuthManager() {
@@ -71,8 +168,8 @@ public class CheckConfig {
     }
 
     public AuthzConfig getConfig() {
-        authzCfg.setPolicyMapper(new StaticPolicyMapper("rebac.check"));
-        authzCfg.setResourceMapper(new CheckResourceMapper(objectTypeMapper, objectIdMapper, relationMapper));
+        authzCfg.setPolicyMapper(policyMapper);
+        authzCfg.setResourceMapper(new CheckResourceMapper(objectTypeMapper, objectIdMapper, relationMapper, baseResourceMapper));
 
         return authzCfg;
     }
